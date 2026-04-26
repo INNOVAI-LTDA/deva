@@ -4,7 +4,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="deva-base-path" content="/deva-diagnosis/" />
   <title>DEVA | Diagnóstico Modular</title>
+  <script>
+    (function () {
+      var configuredBasePath = document.querySelector('meta[name="deva-base-path"]')?.content || '/';
+      var normalizedBasePath = configuredBasePath.endsWith('/') ? configuredBasePath : configuredBasePath + '/';
+      var pathname = window.location.pathname;
+      var useConfiguredBase = pathname === normalizedBasePath.slice(0, -1) || pathname.startsWith(normalizedBasePath);
+      var base = document.createElement('base');
+      base.href = useConfiguredBase ? normalizedBasePath : '/';
+      document.head.appendChild(base);
+      window.__DEVA_BASE_PATH__ = useConfiguredBase ? normalizedBasePath.replace(/\/$/, '') : '';
+    }());
+  </script>
   <link rel="stylesheet" href="./src/styles/tokens.css" />
   <link rel="stylesheet" href="./src/styles/main.css" />
 </head>

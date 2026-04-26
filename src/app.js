@@ -8,6 +8,13 @@ import { calcEconomic, calcDeva, buildFinalJson } from './core/calculations.js';
 import { state, vertex, center } from './core/store.js';
 import { isLeadDataValid } from './core/leadValidation.js';
 
+const runtimeBasePath = typeof window !== 'undefined' ? (window.__DEVA_BASE_PATH__ || '') : '';
+
+function buildAppUrl(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${runtimeBasePath}${normalizedPath}`;
+}
+
 function showPage(id) {
   document.querySelectorAll('.page').forEach((page) => page.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -254,7 +261,7 @@ function bindNavigationEvents() {
     button.textContent = 'Enviando...';
 
     try {
-      const response = await fetch('/api/send-diagnosis', {
+      const response = await fetch(buildAppUrl('/api/send-diagnosis'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

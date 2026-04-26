@@ -2,11 +2,19 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/deva-diagnosis/api/(.*)",
       "destination": "/api/$1"
     },
     {
-      "source": "/(.*)",
+      "source": "/deva-diagnosis/src/(.*)",
+      "destination": "/src/$1"
+    },
+    {
+      "source": "/deva-diagnosis",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/deva-diagnosis/(.*)",
       "destination": "/index.html"
     }
   ]

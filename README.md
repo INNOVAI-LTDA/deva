@@ -39,7 +39,7 @@ Ou seja:
 O botão **Enviar resultados** monta o JSON completo por trás e envia para:
 
 ```txt
-/api/send-diagnosis
+/deva-diagnosis/api/send-diagnosis
 ```
 
 Essa rota está em:
@@ -49,6 +49,34 @@ api/send-diagnosis.js
 ```
 
 Ela usa Resend para enviar e-mail.
+
+## Publicação em subrota no Vercel
+
+Esta versão está preparada para responder em:
+
+```txt
+https://innovai-solutions.com.br/deva-diagnosis
+```
+
+O projeto agora usa um `basePath` em runtime e rewrites no Vercel para servir:
+
+- HTML em `/deva-diagnosis`
+- arquivos estáticos em `/deva-diagnosis/src/...`
+- função serverless em `/deva-diagnosis/api/send-diagnosis`
+
+### Passos no Vercel
+
+1. Importe este repositório como um projeto.
+2. Configure as variáveis `RESEND_API_KEY`, `DIAGNOSIS_TO_EMAIL` e `DIAGNOSIS_FROM_EMAIL`.
+3. Adicione o domínio `innovai-solutions.com.br` ao projeto apenas se este projeto for o responsável pelo domínio inteiro.
+4. Acesse `https://innovai-solutions.com.br/deva-diagnosis`.
+
+### Observação importante sobre domínio
+
+O Vercel vincula domínios por projeto, não por pasta. Então há dois cenários:
+
+- Se `innovai-solutions.com.br` vai apontar para este projeto, a URL `/deva-diagnosis` funcionará com a configuração atual.
+- Se o domínio raiz já serve outro site/projeto, então esse site principal precisa encaminhar a rota `/deva-diagnosis` para este frontend. Isso não é resolvido só dentro deste repositório.
 
 ## Variáveis de ambiente no Vercel
 
