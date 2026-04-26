@@ -7,6 +7,7 @@ import { BRL, formatInput, toast } from './core/formatters.js';
 import { calcEconomic, calcDeva, buildFinalJson } from './core/calculations.js';
 import { state, vertex, center } from './core/store.js';
 import { captureConfig } from './config/capture.config.js';
+import { isLeadDataValid } from './core/leadValidation.js';
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach((page) => page.classList.remove('active'));
@@ -258,12 +259,7 @@ function openWhatsApp(summary) {
 
 
 function validateLeadData() {
-  const lead = getLeadData();
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email);
-  const whatsappDigits = lead.whatsapp.replace(/\D/g, '');
-  const whatsappOk = whatsappDigits.length >= 10;
-
-  return Boolean(lead.name && emailOk && whatsappOk);
+  return isLeadDataValid(getLeadData());
 }
 
 function updateSendButtonState() {
@@ -275,7 +271,7 @@ function updateSendButtonState() {
   button.disabled = !enabled;
   status.textContent = enabled
     ? 'Tudo certo. Clique para enviar seus resultados.'
-    : 'Preencha nome, e-mail válido e WhatsApp para habilitar o envio.';
+    : 'Preencha nome (3+), e-mail no formato texto@texto e WhatsApp com 8+ caracteres.';
 }
 
 function bindNavigationEvents() {
@@ -295,7 +291,7 @@ function bindNavigationEvents() {
   document.getElementById('sendResults').addEventListener('click', async () => {
     if (!validateLeadData()) {
       updateSendButtonState();
-      toast('Preencha nome, e-mail e WhatsApp.');
+      toast('Preencha os dados corretamente para enviar por WhatsApp.');
       return;
     }
 
@@ -320,7 +316,7 @@ function bindNavigationEvents() {
       console.error(error);
       toast('Não foi possível enviar agora.');
       document.getElementById('leadStatus').textContent = 'Falha no envio. Verifique a configuração do servidor/API.';
-      button.textContent = 'Enviar resultados';
+      button.textContent = 'Enviar por WhatsApp';
       updateSendButtonState();
     }
   });
