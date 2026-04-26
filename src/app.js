@@ -6,7 +6,6 @@ import { questionGroups, scenarioLibrary } from './data/diagnosis.data.js';
 import { BRL, formatInput, toast } from './core/formatters.js';
 import { calcEconomic, calcDeva, buildFinalJson } from './core/calculations.js';
 import { state, vertex, center } from './core/store.js';
-import { captureConfig } from './config/capture.config.js';
 import { isLeadDataValid } from './core/leadValidation.js';
 
 function showPage(id) {
@@ -201,60 +200,14 @@ function getLeadData() {
   };
 }
 
-function buildSharePayload() {
+function buildSubmissionPayload() {
   if (!state.finalJson) updateResult();
 
   const lead = getLeadData();
-  const payload = {
+  return {
     ...state.finalJson,
     lead
   };
-
-  const summary = [
-    `${captureConfig.emailSubjectPrefix}`,
-    '',
-    `Nome: ${lead.name || 'não informado'}`,
-    `E-mail: ${lead.email || 'não informado'}`,
-    `WhatsApp: ${lead.whatsapp || 'não informado'}`,
-    '',
-    `Índice DEVA: ${payload.devaMetrics.devaIndexPercent}%`,
-    `Propensão à renovação: ${payload.devaMetrics.renewalPropensityPercent}%`,
-    `Cenário: ${payload.interpretation.scenarioTitle}`,
-    `Custo de oportunidade mensal: ${BRL.format(payload.devaMetrics.opportunityCostMonthly || 0)}`,
-    `Custo de oportunidade em LTV: ${BRL.format(payload.devaMetrics.opportunityCostLTV || 0)}`,
-    '',
-    'JSON completo:',
-    JSON.stringify(payload, null, 2)
-  ].join('\\n');
-
-  return { lead, payload, summary };
-}
-
-async function postToEndpoint(payload) {
-  if (!captureConfig.endpointUrl) return false;
-
-  const response = await fetch(captureConfig.endpointUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) throw new Error('Falha no endpoint');
-  return true;
-}
-
-function openEmailClient(summary) {
-  const subject = encodeURIComponent(`${captureConfig.emailSubjectPrefix}`);
-  const body = encodeURIComponent(summary);
-  const to = encodeURIComponent(captureConfig.destinationEmail);
-  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
-}
-
-function openWhatsApp(summary) {
-  const phone = String(captureConfig.destinationWhatsApp || '').replace(/\\D/g, '');
-  const text = encodeURIComponent(summary.slice(0, 3500));
-  const url = phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
-  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 
@@ -291,11 +244,11 @@ function bindNavigationEvents() {
   document.getElementById('sendResults').addEventListener('click', async () => {
     if (!validateLeadData()) {
       updateSendButtonState();
-      toast('Preencha os dados corretamente para enviar por WhatsApp.');
+      toast('Preencha os dados corretamente para enviar os resultados.');
       return;
     }
 
-    const { payload } = buildSharePayload();
+    const payload = buildSubmissionPayload();
     const button = document.getElementById('sendResults');
     button.disabled = true;
     button.textContent = 'Enviando...';
@@ -316,7 +269,7 @@ function bindNavigationEvents() {
       console.error(error);
       toast('Não foi possível enviar agora.');
       document.getElementById('leadStatus').textContent = 'Falha no envio. Verifique a configuração do servidor/API.';
-      button.textContent = 'Enviar por WhatsApp';
+      button.textContent = 'Enviar resultados';
       updateSendButtonState();
     }
   });

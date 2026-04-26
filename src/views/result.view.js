@@ -56,7 +56,7 @@ export function renderResultView() {
           </div>
           <div class="lead-actions">
             <button class="btn" id="backQuestions">Voltar</button>
-            <button class="btn btn-primary" id="sendResults" disabled>Enviar por WhatsApp</button>
+            <button class="btn btn-primary" id="sendResults" disabled>Enviar resultados</button>
           </div>
           <p class="lead-note" id="leadStatus">Preencha nome (3+), e-mail (texto@texto) e WhatsApp (8+ caracteres) para habilitar o envio.</p>
         </div>

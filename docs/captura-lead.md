@@ -10,26 +10,26 @@
 6. Informa nome/e-mail/WhatsApp
 7. Envia diagnóstico
 
-## Modos de envio
+## Implementação atual
 
-### Modo sem backend
+Na versão atual publicada neste repositório, a tela final não exibe botões de:
 
-Usa:
-
-- mailto
-- wa.me
+- `mailto`
+- `wa.me`
 - download JSON
 - copiar JSON
 
-### Modo com backend/webhook
-
-Configure `endpointUrl` em:
+O frontend gera o JSON internamente e envia um `POST` para:
 
 ```txt
-src/config/capture.config.js
+/api/send-diagnosis
 ```
 
-O frontend enviará um POST com:
+Essa rota serverless recebe o payload e dispara o envio por e-mail.
+
+## Payload enviado
+
+O frontend envia um POST com:
 
 ```json
 {
@@ -47,11 +47,6 @@ O frontend enviará um POST com:
 }
 ```
 
-## Recomendação prática
+## Observação
 
-Para uso público, o caminho mais rápido é usar um webhook do Make/Zapier/Apps Script que:
-
-1. recebe o JSON
-2. salva em planilha/CRM
-3. envia notificação por e-mail
-4. dispara mensagem para o responsável comercial
+Ainda existem referências antigas a `mailto`, `wa.me` e ações de JSON em documentação e estilos legados, mas esses controles não fazem parte da UI atual renderizada pela tela de resultado.
