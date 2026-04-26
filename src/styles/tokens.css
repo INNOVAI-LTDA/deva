@@ -1,0 +1,20 @@
+:root{
+  --bg:#061221;
+  --bg2:#07172c;
+  --panel:#0f2744;
+  --panel2:#102945;
+  --line:#314763;
+  --gold:#f5bd42;
+  --gold2:#ffd76a;
+  --text:#f7f9fc;
+  --muted:#a9b9ca;
+  --green:#61d48b;
+  --blue:#6aa8ff;
+  --purple:#b16cff;
+  --orange:#ff7b50;
+  --red:#ff684d;
+  --radius:18px;
+  --shadow:0 18px 42px rgba(0,0,0,.35);
+  --font:Arial,Helvetica,sans-serif;
+  --sidebar-width:238px;
+}
